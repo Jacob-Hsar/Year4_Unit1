@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House of J&S Computer Training Center - Advanced Exam Portal</title>
+    <style>
+        :root {
+            --primary-color: #1e3c72;
+            --secondary-color: #2a5298;
+            --accent-color: #00b4db;
+            --success-color: #2ec4b6;
+            --danger-color: #e63946;
+            --text-main: #2b2d42;
+            --bg-light: #f8f9fa;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .portal-wrapper {
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .main-card {
+            width: 100%;
+            max-width: 900px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+            border-top: 8px solid var(--primary-color);
+        }
+
+        .login-card {
+            max-width: 480px;
+            text-align: center;
+        }
+
+        .brand-header {
+            margin-bottom: 30px;
+        }
+
+        .logo-area {
+            width: 110px;
+            height: 110px;
+            border: 3px dashed #cbd5e1;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            font-size: 13px;
+            font-weight: 600;
+            background: #f8fafc;
+        }
+
+        .brand-header h1 {
+            font-size: 26px;
+            color: var(--primary-color);
+            margin: 0 0 8px 0;
+            font-weight: 700;
+        }
+
+        .brand-header h2 {
+            font-size: 16px;
+            color: #64748b;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #475569;
+        }
+
+        input[type="text"], input[type="password"], textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 15px;
+            color: var(--text-main);
+            background-color: #f8fafc;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(42, 82, 152, 0.1);
+        }
+
+        /* Proctor Panel */
+        .proctor-panel {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 9999;
+        }
+
+        .sticky-timer {
+            background: rgba(30, 60, 114, 0.95);
+            backdrop-filter: blur(10px);
+            color: #ffffff;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 700;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            display: none;
+            border: 2px solid rgba(255,255,255,0.1);
+            text-align: center;
+        }
+
+        .warning-counter {
+            background: #e63946;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            display: none;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .student-hud {
+            display: flex;
+            justify-content: space-between;
+            background: #f1f5f9;
+            padding: 15px 25px;
+            border-radius: 10px;
+            margin-bottom: 35px;
+            font-size: 14px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .section-banner {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            color: #ffffff;
+            padding: 14px 20px;
+            margin: 45px 0 25px 0;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .question-block {
+            background: #ffffff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .question-text {
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .option-container {
+            display: block;
+            position: relative;
+            padding-left: 35px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            font-size: 15px;
+            line-height: 20px;
+        }
+
+        .option-container input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 20px;
+            width: 20px;
+            background-color: #edf2f7;
+            border: 2px solid #cbd5e1;
+            border-radius: 50%;
+        }
+
+        .option-container input:checked ~ .checkmark {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        .option-container input:checked ~ .checkmark:after {
+            display: block;
+        }
+
+        .option-container .checkmark:after {
+            top: 5px;
+            left: 5px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: white;
+        }
+
+        /* Improved Grid Box Layout for Part B */
+        .blanks-grid {
+            display: block;
+        }
+
+        .blank-row {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .blank-text {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-main);
+            flex: 1;
+            padding-right: 20px;
+        }
+
+        .blank-box-input {
+            width: 180px !important;
+            padding: 10px 14px !important;
+            text-align: center;
+            font-weight: 600;
+            border: 2px solid #cbd5e1 !important;
+            border-radius: 6px !important;
+            background: #ffffff !important;
+        }
+
+        /* Two-Column Matrix Matching System */
+        .matching-container {
+            display: table;
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 15px 0;
+            margin-top: 15px;
+        }
+
+        .matching-column {
+            display: table-cell;
+            width: 50%;
+            vertical-align: top;
+        }
+
+        .match-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            min-height: 72px;
+            display: flex;
+            align-items: center;
+        }
+
+        .match-left-card {
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .match-right-card {
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .match-input-box {
+            width: 45px !important;
+            padding: 6px 4px !important;
+            text-align: center;
+            font-weight: 700;
+            margin-right: 12px;
+            border: 2px solid #cbd5e1 !important;
+            border-radius: 6px !important;
+            background: #ffffff !important;
+            color: var(--primary-color);
+            text-transform: uppercase;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .submit-wrapper {
+            max-width: 280px;
+            margin: 40px auto 0;
+        }
+
+        #scoreDisplayBoard {
+            display: none;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 40px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .score-success { background: #ecfdf5; color: #065f46; border: 2px solid #a7f3d0; }
+        .score-failed { background: #fef2f2; color: #991b1b; border: 2px solid #fca5a5; }
+    </style>
+</head>
+<body oncontextmenu="return false;" ondrop="return false;" ondragstart="return false;">
+
+<div class="proctor-panel">
+    <div class="sticky-timer" id="floatingClock">Timer: 60:00</div>
+    <div class="warning-counter" id="warningBox">Warnings: 0/3</div>
+</div>
+
+<div class="portal-wrapper">
+    
+    <div class="main-card login-card" id="gateBlock">
+        <div class="brand-header">
+            <div class="logo-area">
+                <img src="logo1.png" alt="" style="width: 150px; height: auto;">
+            </div>
+            <h1>House of J&S</h1>
+            <h2>Computer Training Center Portal</h2>
+        </div>
+        
+        <div class="input-group">
+            <label>Student Name</label>
+            <input type="text" id="formName" placeholder="Enter Full Name" autocomplete="off">
+        </div>
+        <div class="input-group">
+            <label>Candidate Center</label>
+            <input type="text" id="formCenter" placeholder="e.g. Yangon Center" autocomplete="off">
+        </div>
+        <div class="input-group">
+            <label>Candidate ID</label>
+            <input type="text" id="formID" placeholder="e.g. HJS-1092" autocomplete="off">
+        </div>
+        <div class="input-group">
+            <label>Exam Password</label>
+            <input type="password" id="formSecret" placeholder="••••••••">
+        </div>
+        
+        <button type="button" class="action-btn" onclick="initializePortal()" style="margin-top: 15px;">Authenticate & Start</button>
+    </div>
+
+    <div class="main-card" id="examBlock" style="display: none;">
+        <div class="brand-header" style="text-align: center;">
+            <div class="logo-area"><img src="logo1.png" alt="" style="width: 150px; height: auto;"></div>
+            <h1>House of J&S Computer Training Center</h1>
+            <h2>Unit 1: Online Safety & Green Screen Assessment</h2>
+            <p style="font-size: 14px; margin: 10px 0 0; color: #64748b;"><b>Total Marks: 80 Marks</b> | Time Limit: 1 Hour</p>
+        </div>
+
+        <div class="student-hud">
+            <div><b>Student:</b> <span id="hudName" style="color:var(--primary-color); font-weight:600;"></span></div>
+            <div><b>Center:</b> <span id="hudCenter" style="color:var(--primary-color); font-weight:600;"></span></div>
+            <div><b>ID:</b> <span id="hudID" style="color:var(--primary-color); font-weight:600;"></span></div>
+        </div>
+
+        <form id="quizDataSheet">
+            
+            <div class="section-banner">PART A: MULTIPLE CHOICE QUESTIONS (20 QUESTIONS - 20 MARKS)</div>
+            
+            <div class="question-block">
+                <p class="question-text">1. Karla gets a message from some friends. The message says unkind things about another student. What should Karla do?</p>
+                <label class="option-container">A) Send a message back saying it is funny but do not tell anyone.<input type="radio" name="m1" value="A"><span class="checkmark"></span></label>
+                <label class="option-container">B) Send the message to everyone because it is funny.<input type="radio" name="m1" value="B"><span class="checkmark"></span></label>
+                <label class="option-container">C) Do not send it to anyone, but tell your closest friend and a teacher.<input type="radio" name="m1" value="C"><span class="checkmark"></span></label>
+                <label class="option-container">D) Do not send it to anyone, but tell your parents or carers and your teacher.<input type="radio" name="m1" value="D"><span class="checkmark"></span></label>
+            </div>
+            <div class="question-block">
+                <p class="question-text">2. What is cyberbullying according to Lesson 2/3 definitions?</p>
+                <label class="option-container">A) Bullying that only happens physically at school.<input type="radio" name="m2" value="A"><span class="checkmark"></span></label>
+                <label class="option-container">B) Cyberbullying is when someone uses an internet connected device to be unkind to another person.<input type="radio" name="m2" value="B"><span class="checkmark"></span></label>
+                <label class="option-container">C) Sharing coding programs with teammates safely.<input type="radio" name="m2" value="C"><span class="checkmark"></span></label>
+                <label class="option-container">D) Recording video presentations in a quiet environment.<input type="radio" name="m2" value="D"><span class="checkmark"></span></label>
+            </div>
+            <div class="question-block">
+                <p class="question-text">3. Which multi-role device would be a good choice for creating a green screen project?</p>
+                <label class="option-container">A) A standard paper printer<input type="radio" name="m3" value="A"><span class="checkmark"></span></label>
+                <label class="option-container">B) External sound speakers<input type="radio" name="m3" value="B"><span class="checkmark"></span></label>
+                <label class="option-container">C) A tablet computer or multi-role system<input type="radio" name="m3" value="C"><span class="checkmark"></span></label>
+                <label class="option-container">D) An analog power cable<input type="radio" name="m3" value="D"><span class="checkmark"></span></label>
+            </div>
+            <div class="question-block">
+                <p class="question-text">4. What does the trim tool do in a green screen application?</p>
+                <label class="option-container">A) It duplicates the media layers automatically.<input type="radio" name="m4" value="A"><span class="checkmark"></span></label>
+                <label class="option-container">B) It adjusts the color contrast level of a scene.<input type="radio" name="m4" value="B"><span class="checkmark"></span></label>
+                <label class="option-container">C) It imports pictures from global websites.<input type="radio" name="m4" value="C"><span class="checkmark"></span></label>
+                <label class="option-container">D) It deletes part of the clip from the red line onwards.<input type="radio" name="m4" value="D"><span class="checkmark"></span></label>
+            </div>
+            <div class="question-block">
+                <p class="question-text">5. What does the split tool do in editing applications?</p>
+                <label class="option-container">A) It deletes the whole project workspace.<input type="radio" name="m5" value="A"><span class="checkmark"></span></label>
+                <label class="option-container">B) It alters the camera lens magnification settings.<input type="radio" name="m5" value="B"><span class="checkmark"></span></label>
+                <label class="option-container">C) It splits the video file/clip into two places.<input type="radio" name="m5" value="C"><span class="checkmark"></span></label>
+                <label class="option-container">D) It exports the file to an email layout directly.<input type="radio" name="m5" value="D"><span class="checkmark"></span></label>
+            </div>
+            <div class="question-block">
+                <p class="question-text">6. In Lesson 6, what is the core definition of Cropping?</p>
+                <label class="option-container">A) Joining two media things together seamlessly.<input type="radio" name="m6" value="A"><span class="checkmark"></span></label>
+                <label class="option-container">B) Is cutting something out of a picture or video frame.<input type="radio" name="m6" value="B"><span class="checkmark"></span></label>
+                <label class="option-container">C) Bringing external files into the application system.<input type="radio" name="m6" value="C"><span class="checkmark"></span></label>
+                <label class="option-container">D) Writing a text dialogue script for performers.<input type="radio" name="m6" value="D"><span class="checkmark"></span></label>
+            </div>
+            <div class="question-block">
+                <p class="question-text">7. In Lesson 6, what is the core definition of Merging?</p>
+                <label class="option-container">A) Bringing a new image into the software asset database.<input type="radio" name="m7" value="A"><span class="checkmark"></span></label>
+                <label class="option-container">B) Trimming out all mistakes from active media clips.<input type="radio" name="m7" value="B"><span class="checkmark"></span></label>
+                <label class="option-container">C) Merging is a word that means joining two things together.<input type="radio" name="m7" value="C"><span class="checkmark"></span></label>
+                <label class="option-container">D) Deleting the application settings completely.<input type="radio" name="m7" value="D"><span class="checkmark"></span></label>
+            </div>
+            <div class="question-block">
+                <p class="question-text">8. In Lesson 6, what is the core definition of Importing?</p>
+                <label class="option-container">A) Means to bring something into the application workspace.<input type="radio" name="m8" value="A"><span class="checkmark"></span></label>
+                <label class="option-container">B) Cutting down video segments systematically.<input type="radio" name="m8" value="B"><span class="checkmark"></span></label>
+                <label class="option-container">C) Reviewing script presentation acts with teachers.<input type="radio" name="m8" value="C"><span class="checkmark"></span></label>
+                <label class="option-container">D) Changing screen background cloth to green dye.<input type="radio" name="m8" value="D"><span class="checkmark"></span></label>
+            </div>
+            <div class="question-block">
+                <p class="question-text">9. What problem does a noisy background sound (like a loud bird) cause in a presentation video?</p>
+                <label class="option-container">A) It improves the overall sound clarity level.<input type="radio" name="m9" value="A"><span class="checkmark"></span></label>
+                <label class="option-container">B) The noisy bird will distract from the people in the video.<input type="radio" name="m9" value="B"><span class="checkmark"></span></label>
+                <label class="option-container">C) It automatically translates the script lines.<input type="radio" name="m9" value="C"><span class="checkmark"></span></label>
+                <label class="option-container">D) It updates the camera recording resolution profile.<input type="radio" name="m9" value="D"><span class="checkmark"></span></label>
+            </div>
+            <div class="question-block">
+                <p class="question-text">10. Green screen videoing means recording in front of a ______ background.</p>
+                <label class="option-container">A) Pitch black wood wall<input type="radio" name="m10" value="A"><span class="checkmark"></span></label>
+                <label class="option-container">B) Transparent digital glass pane<input type="radio" name="m10" value="B"><span class="checkmark"></span></label>
+                <label class="option-container">C) Coloured (Green) background that can be replaced on computers.<input type="radio" name="m10" value="C"><span class="checkmark"></span></label>
+                <label class="option-container">D) Multi-layered brick framework<input type="radio" name="m10" value="D"><span class="checkmark"></span></label>
+            </div>
+            <div class="question-block">
+                <p class="question-text">11. Stage directions in a presentation script are normally written inside ______.</p>
+                <label class="option-container">A) Square brackets [ like: walks away ]<input type="radio" name="m11" value="A"><span class="checkmark"></span></label>
+                <label class="option-container">B) Curly brackets { like: shouts }<input type="radio" name="m11" value="B"><span class="checkmark"></span></label>
+                <label class="option-container">C) Quotation marks " like: nervous "<input type="radio" name="m11" value="C"><span class="checkmark"></span></label>
+                <label class="option-container">D) Double percentage markers %%<input type="radio" name="m11" value="D"><span class="checkmark"></span></label>
+            </div>
+            <div class="question-block">
+                <p class="question-text">12. Which of the following is completely SAFE to share on an online public forum profile?</p>
+                <label class="option-container">A) My full name and household road street address<input type="radio" name="m12" value="A"><span class="checkmark"></span></label>
+                <label class="option-container">B) My primary telephone contact number<input type="radio" name="m12" value="B"><span class="checkmark"></span></label>
+                <label class="option-container">C) My first name only and my favourite book title / hobbies<input type="radio" name="m12" value="C"><span class="checkmark"></span></label>
+                <label class="option-container">D) A photo showing my uniform and school campus location<input type="radio" name="m12" value="D"><span class="checkmark"></span></label>
+            </div>
+            <div class="question-block">
+                <p class="question-text">13. Which of the following is UNSAFE to display publicly online?</p>
+                <label class="option-container">A) The name of my family pet and home road name<input type="radio" name="m13" value="A"><span class="checkmark"></span></label>
+                <label class="option-container">B) My favourite colour option<input type="radio" name="m13" value="B"><span class="checkmark"></span></label>
+                <label class="option-container">C) The title of my favourite fiction storybook<input type="radio" name="m13" value="C"><span class="checkmark"></span></label>
+                <label class="option-container">D) General country location info where I reside<input type="radio" name="m13" value="D"><span class="checkmark"></span></label>
+            </div>
+            <div class="question-block">
+                <p class="question-text">14. What emotional state could cyberbullying induce in an individual?</p>
+                <label class="option-container">A) Highly motivated and energized status<input type="radio" name="m14" value="A"><span class="checkmark"></span></label>
+                <label class="option-container">B) Sad, lonely, stressed, and nervous about talking to others<input type="radio" name="m14" value="B"><span class="checkmark"></span></label>
+                <label class="option-container">C) Extremely secure about social networking safety rules<input type="radio" name="m14" value="C"><span class="checkmark"></span></label>
+                <label class="option-container">D) Improved academic focus and technical capability<input type="radio" name="m14" value="D"><span class="checkmark"></span></label>
+            </div>
+            <div class="question-block">
+                <p class="question-text">15. If a student is being cyberbullied, you should encourage them to tell a ______.</p>
+                <label class="option-container">A) Stranger online via global chatting apps<input type="radio" name="m15" value="A"><span class="checkmark"></span></label>
+                <label class="option-container">B) Trusted adult (like a parent, carer, or teacher)<input type="radio" name="m15" value="B"><span class="checkmark"></span></label>
+                <label class="option-container">C) Younger student in the lower primary class group<input type="radio" name="m15" value="C"><span class="checkmark"></span></label>
+                <label class="option-container">D) Automated chatbot platform workspace system<input type="radio" name="m15" value="D"><span class="checkmark"></span></label>
+            </div>
+            <div class="question-block">
+                <p class="question-text">16. Cyberbullying messages can be distributed through which of the following media channels?</p>
+                <label class="option-container">A) Only offline printed diary books<input type="radio" name="m16" value="A"><span class="checkmark"></span></label>
+                <label class="option-container">B) Emails, photos, messaging apps, or online games<input type="radio" name="m16" value="B"><span class="checkmark"></span></label>
+                <label class="option-container">C) Locally disconnected video monitors<input type="radio" name="m16" value="C"><span class="checkmark"></span></label>
+                <label class="option-container">D) Basic hardware power units<input type="radio" name="m16" value="D"><span class="checkmark"></span></label>
+            </div>
+            <div class="question-block">
+                <p class="question-text">17. Where should you look for legal digital backdrop photos for assessment projects?</p>
+                <label class="option-container">A) Private copyrighted gallery panels without permission<input type="radio" name="m17" value="A"><span class="checkmark"></span></label>
+                <label class="option-container">B) Downloading photos from a website with free pictures legally<input type="radio" name="m17" value="B"><span class="checkmark"></span></label>
+                <label class="option-container">C) Capturing private strangers' portraits randomly<input type="radio" name="m17" value="C"><span class="checkmark"></span></label>
+                <label class="option-container">D) Encrypted banking portal assets database screens<input type="radio" name="m17" value="D"><span class="checkmark"></span></label>
+            </div>
+            <div class="question-block">
+                <p class="question-text">18. Why do we need to edit videos after recording in front of a green backdrop screen?</p>
+                <label class="option-container">A) To make the file size extremely heavy intentionally<input type="radio" name="m18" value="A"><span class="checkmark"></span></label>
+                <label class="option-container">B) To remove unwanted parts, mistakes, or long pauses from the file<input type="radio" name="m18" value="B"><span class="checkmark"></span></label>
+                <label class="option-container">C) To add encrypted passwords inside the media layer metadata<input type="radio" name="m18" value="C"><span class="checkmark"></span></label>
+                <label class="option-container">D) To scramble the audio track sequence automatically<input type="radio" name="m18" value="D"><span class="checkmark"></span></label>
+            </div>
+            <div class="question-block">
+                <p class="question-text">19. In Adam's lesson scenario script, what character setting environment was utilized?</p>
+                <label class="option-container">A) Professional television studio hall room<input type="radio" name="m19" value="A"><span class="checkmark"></span></label>
+                <label class="option-container">B) Adam's private bedroom setup space<input type="radio" name="m19" value="B"><span class="checkmark"></span></label>
+                <label class="option-container">C) Busy corporate networking server department<input type="radio" name="m19" value="C"><span class="checkmark"></span></label>
+                <label class="option-container">D) Public open-air stadium arena complex<input type="radio" name="m19" value="D"><span class="checkmark"></span></label>
+            </div>
+            <div class="question-block">
+                <p class="question-text">20. What is an effective method to handle an online cyberbully message targeting a peer?</p>
+                <label class="option-container">A) Delete it, do not forward it, and report it immediately to an authority/adult.<input type="radio" name="m20" value="A"><span class="checkmark"></span></label>
+                <label class="option-container">B) Share it to massive group chats to gain popularity scores.<input type="radio" name="m20" value="B"><span class="checkmark"></span></label>
+                <label class="option-container">C) Reply with harsher cyberbullying content elements.<input type="radio" name="m20" value="C"><span class="checkmark"></span></label>
+                <label class="option-container">D) Switch off all local electricity network modules.<input type="radio" name="m20" value="D"><span class="checkmark"></span></label>
+            </div>
+
+            <div class="section-banner">PART B: FILL IN THE BLANKS (10 MARKS)</div>
+            <div class="question-block blanks-grid">
+                <div class="blank-row">
+                    <div class="blank-text">1. Is it safe to share "my first name" online? (safe / unsafe)</div>
+                    <input type="text" id="f1" class="blank-box-input" placeholder="Type here">
+                </div>
+                <div class="blank-row">
+                    <div class="blank-text">2. Is it safe to share "the school I go to" online? (safe / unsafe)</div>
+                    <input type="text" id="f2" class="blank-box-input" placeholder="Type here">
+                </div>
+                <div class="blank-row">
+                    <div class="blank-text">3. Is it safe to share "the country I live in" online? (safe / unsafe)</div>
+                    <input type="text" id="f3" class="blank-box-input" placeholder="Type here">
+                </div>
+                <div class="blank-row">
+                    <div class="blank-text">4. Is it safe to share "my telephone number" online? (safe / unsafe)</div>
+                    <input type="text" id="f4" class="blank-box-input" placeholder="Type here">
+                </div>
+                <div class="blank-row">
+                    <div class="blank-text">5. Is it safe to share "my favourite hobbies" online? (safe / unsafe)</div>
+                    <input type="text" id="f5" class="blank-box-input" placeholder="Type here">
+                </div>
+                <div class="blank-row">
+                    <div class="blank-text">6. Is it safe to share "my email address" online? (safe / unsafe)</div>
+                    <input type="text" id="f6" class="blank-box-input" placeholder="Type here">
+                </div>
+                <div class="blank-row">
+                    <div class="blank-text">7. Is it safe to share "the name of my pet" online? (safe / unsafe)</div>
+                    <input type="text" id="f7" class="blank-box-input" placeholder="Type here">
+                </div>
+                <div class="blank-row">
+                    <div class="blank-text">8. Is it safe to share "the title of my favourite book" online? (safe / unsafe)</div>
+                    <input type="text" id="f8" class="blank-box-input" placeholder="Type here">
+                </div>
+                <div class="blank-row">
+                    <div class="blank-text">9. Cyberbullying is when someone uses an ________ connected device to be unkind.</div>
+                    <input type="text" id="f9" class="blank-box-input" placeholder="Missing word">
+                </div>
+                <div class="blank-row">
+                    <div class="blank-text">10. This might be to send hurtful items through messaging apps or online ________.</div>
+                    <input type="text" id="f10" class="blank-box-input" placeholder="Missing word">
+                </div>
+            </div>
+
+            <div class="section-banner">PART C: MATRIX MATCHING EXERCISE (10 QUESTIONS - 10 MARKS)</div>
+            <p style="font-size: 14px; color:#475569; margin-left: 5px;"><i>Instruction: Match the concepts on the left column with the correct definitions on the right column by typing the correct Letter (A, B, C...) into the boxes.</i></p>
+            
+            <div class="question-block" style="background: transparent; border: none; padding: 0;">
+                <div class="matching-container">
+                    
+                    <div class="matching-column">
+                        <h4 style="margin-top:0; color:var(--primary-color);">Concepts</h4>
+                        <div class="match-card match-left-card">
+                            <input type="text" id="k1" class="match-input-box" maxlength="1" placeholder="?">
+                            <span>1. Cropping</span>
+                        </div>
+                        <div class="match-card match-left-card">
+                            <input type="text" id="k2" class="match-input-box" maxlength="1" placeholder="?">
+                            <span>2. Merging</span>
+                        </div>
+                        <div class="match-card match-left-card">
+                            <input type="text" id="k3" class="match-input-box" maxlength="1" placeholder="?">
+                            <span>3. Importing</span>
+                        </div>
+                        <div class="match-card match-left-card">
+                            <input type="text" id="k4" class="match-input-box" maxlength="1" placeholder="?">
+                            <span>4. Green screen videoing</span>
+                        </div>
+                        <div class="match-card match-left-card">
+                            <input type="text" id="k5" class="match-input-box" maxlength="1" placeholder="?">
+                            <span>5. Noisy bird sound</span>
+                        </div>
+                        <div class="match-card match-left-card">
+                            <input type="text" id="k6" class="match-input-box" maxlength="1" placeholder="?">
+                            <span>6. Cyberbullying</span>
+                        </div>
+                        <div class="match-card match-left-card">
+                            <input type="text" id="k7" class="match-input-box" maxlength="1" placeholder="?">
+                            <span>7. Square brackets [ ]</span>
+                        </div>
+                        <div class="match-card match-left-card">
+                            <input type="text" id="k8" class="match-input-box" maxlength="1" placeholder="?">
+                            <span>8. Backdrop needed</span>
+                        </div>
+                        <div class="match-card match-left-card">
+                            <input type="text" id="k9" class="match-input-box" maxlength="1" placeholder="?">
+                            <span>9. Download photos</span>
+                        </div>
+                        <div class="match-card match-left-card">
+                            <input type="text" id="k10" class="match-input-box" maxlength="1" placeholder="?">
+                            <span>10. Video editing purpose</span>
+                        </div>
+                    </div>
+
+                    <div class="matching-column">
+                        <h4 style="margin-top:0; color:var(--accent-color);">Definitions Layout</h4>
+                        <div class="match-card match-right-card"><b>A&nbsp;</b> — Is cutting something out of a picture or video frame</div>
+                        <div class="match-card match-right-card"><b>B&nbsp;</b> — Is a word that means joining two things together</div>
+                        <div class="match-card match-right-card"><b>C&nbsp;</b> — Means to bring something into the media application</div>
+                        <div class="match-card match-right-card"><b>D&nbsp;</b> — Recording in front of a coloured green background cloth</div>
+                        <div class="match-card match-right-card"><b>E&nbsp;</b> — Will distract audience focus from the people in video</div>
+                        <div class="match-card match-right-card"><b>F&nbsp;</b> — Bullying that happens online or through digital social apps</div>
+                        <div class="match-card match-right-card"><b>G&nbsp;</b> — Used precisely for stage directions inside a script text</div>
+                        <div class="match-card match-right-card"><b>H&nbsp;</b> — Bedroom wall, school playground, or virtual party room scenes</div>
+                        <div class="match-card match-right-card"><b>I&nbsp;</b> — Safely from an open public website with free pictures legally</div>
+                        <div class="match-card match-right-card"><b>J&nbsp;</b> — Specifically to remove unwanted parts or errors of the video</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="section-banner">PART D: SHORT ANSWER QUESTIONS (10 QUESTIONS - 20 MARKS)</div>
+            <div class="question-block"><p class="question-text">1. Write down two examples of being cyberbullied from Lesson 2.</p><textarea id="s1" rows="2"></textarea></div>
+            <div class="question-block"><p class="question-text">2. What is the definition of cyberbullying according to Lesson 2?</p><textarea id="s2" rows="2"></textarea></div>
+            <div class="question-block"><p class="question-text">3. Give examples for how cyberbullying might make someone feel.</p><textarea id="s3" rows="2"></textarea></div>
+            <div class="question-block"><p class="question-text">4. How could you help a person who is being cyberbullied?</p><textarea id="s4" rows="2"></textarea></div>
+            <div class="question-block"><p class="question-text">5. Name three devices or platforms used to send hurtful items.</p><textarea id="s5" rows="2"></textarea></div>
+            <div class="question-block"><p class="question-text">6. List four words that describe a mind map about cyberbullying feelings.</p><textarea id="s6" rows="2"></textarea></div>
+            <div class="question-block"><p class="question-text">7. Write two questions you could ask someone who has been cyberbullied.</p><textarea id="s7" rows="2"></textarea></div>
+            <div class="question-block"><p class="question-text">8. What happens to the green background on the computer in green screen videoing?</p><textarea id="s8" rows="2"></textarea></div>
+            <div class="question-block"><p class="question-text">9. State two reasons why videos need to be edited after recording.</p><textarea id="s9" rows="2"></textarea></div>
+            <div class="question-block"><p class="question-text">10. How can a noisy background bird sound error be fixed?</p><textarea id="s10" rows="2"></textarea></div>
+
+            <div class="section-banner">PART E: COMPREHENSIVE LONG QUESTIONS (5 QUESTIONS - 20 MARKS)</div>
+            <div class="question-block"><p class="question-text">1. Explain Huifen's problem case study and how it affects her emotional state.</p><textarea id="l1" rows="4"></textarea></div>
+            <div class="question-block"><p class="question-text">2. Elaborate on the core purposes of Cropping, Merging, and Importing in media application software.</p><textarea id="l2" rows="4"></textarea></div>
+            <div class="question-block"><p class="question-text">3. Look at Adam's script sample. Analyze how he uses stage directions to express feelings.</p><textarea id="l3" rows="4"></textarea></div>
+            <div class="question-block"><p class="question-text">4. What step-by-step measures should you take to select and download a legal, free digital backdrop picture?</p><textarea id="l4" rows="4"></textarea></div>
+            <div class="question-block"><p class="question-text">5. Why is it dangerous to share a photo of yourself in a school uniform online? Detail your answer based on online safety rules.</p><textarea id="l5" rows="4"></textarea></div>
+
+            <div class="submit-wrapper">
+                <button type="button" class="action-btn" onclick="executeGradingEngine(false)">Submit Assessment</button>
+            </div>
+        </form>
+
+        <div id="scoreDisplayBoard"></div>
+    </div>
+</div>
+
+<script>
+    let clockTicker;
+    let clockSeconds = 3600; 
+    let warningCount = 0;
+    let examSubmitted = false;
+
+    function initializePortal() {
+        const nameVal = document.getElementById('formName').value.trim();
+        const centerVal = document.getElementById('formCenter').value.trim();
+        const idVal = document.getElementById('formID').value.trim();
+        const secretVal = document.getElementById('formSecret').value;
+
+        if(!nameVal || !centerVal || !idVal) {
+            alert("Error: Missing credentials fields.");
+            return;
+        }
+        
+        if(secretVal === "HJS2026") {
+            document.getElementById('gateBlock').style.display = 'none';
+            document.getElementById('examBlock').style.display = 'block';
+            document.getElementById('floatingClock').style.display = 'block';
+            document.getElementById('warningBox').style.display = 'block';
+            
+            document.getElementById('hudName').innerText = nameVal;
+            document.getElementById('hudCenter').innerText = centerVal;
+            document.getElementById('hudID').innerText = idVal;
+            
+            startCountdown();
+            setupAntiCheat();
+        } else {
+            alert("Security Alert: Invalid Exam Password.");
+        }
+    }
+
+    function startCountdown() {
+        clockTicker = setInterval(function() {
+            if(clockSeconds <= 0) {
+                clearInterval(clockTicker);
+                alert("Timeout: Automatically submitting exam sheets.");
+                executeGradingEngine(false);
+            } else {
+                clockSeconds--;
+                let m = Math.floor(clockSeconds / 60);
+                let s = clockSeconds % 60;
+                document.getElementById('floatingClock').innerText = 
+                    "Time Left: " + (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+            }
+        }, 1000);
+    }
+
+    function setupAntiCheat() {
+        window.addEventListener('blur', function() {
+            if (examSubmitted) return;
+            
+            warningCount++;
+            document.getElementById('warningBox').innerText = `Warnings: ${warningCount}/3`;
+            
+            if(warningCount >= 3) {
+                clearInterval(clockTicker);
+                alert("🚨 CHEATING DETECTED: You have left the exam window 3 times! Your paper is being submitted automatically with 0/80 Marks.");
+                executeGradingEngine(true); 
+            } else {
+                alert(`⚠️ WARNING (${warningCount}/3): You left the exam screen! Moving out of this window again will cause an automatic failure (0/80 Marks).`);
+            }
+        });
+    }
+
+    function executeGradingEngine(isCheatedPenalty = false) {
+        if(examSubmitted) return;
+        examSubmitted = true;
+        clearInterval(clockTicker);
+        
+        const board = document.getElementById('scoreDisplayBoard');
+        board.style.display = "block";
+
+        if (isCheatedPenalty) {
+            board.className = "score-failed";
+            board.innerHTML = `
+                <div style='font-size:24px; margin-bottom:10px;'>🚨 EXAM TERMINATED (ANTI-CHEAT LOCK)</div>
+                <strong>Final Result: 0 / 80 Marks</strong><br>
+                <span style='font-size:14px; font-weight:normal;'>
+                    Reason: The candidate violated strict testing conditions by changing window tabs/screens 3 times. 
+                    This activity was logged and reported to House of J&S Computer Training Center administration.
+                </span>
+            `;
+        } else {
+            let finalMarks = 0;
+            const form = document.getElementById('quizDataSheet');
+
+            // Part A: MCQ (20 Marks)
+            if(form.m1 && form.m1.value === "D") finalMarks += 1;
+            if(form.m2 && form.m2.value === "B") finalMarks += 1;
+            if(form.m3 && form.m3.value === "C") finalMarks += 1;
+            if(form.m4 && form.m4.value === "D") finalMarks += 1;
+            if(form.m5 && form.m5.value === "C") finalMarks += 1;
+            if(form.m6 && form.m6.value === "B") finalMarks += 1;
+            if(form.m7 && form.m7.value === "C") finalMarks += 1;
+            if(form.m8 && form.m8.value === "A") finalMarks += 1;
+            if(form.m9 && form.m9.value === "B") finalMarks += 1;
+            if(form.m10 && form.m10.value === "C") finalMarks += 1;
+            if(form.m11 && form.m11.value === "A") finalMarks += 1;
+            if(form.m12 && form.m12.value === "C") finalMarks += 1;
+            if(form.m13 && form.m13.value === "A") finalMarks += 1;
+            if(form.m14 && form.m14.value === "B") finalMarks += 1;
+            if(form.m15 && form.m15.value === "B") finalMarks += 1;
+            if(form.m16 && form.m16.value === "B") finalMarks += 1;
+            if(form.m17 && form.m17.value === "B") finalMarks += 1;
+            if(form.m18 && form.m18.value === "B") finalMarks += 1;
+            if(form.m19 && form.m19.value === "B") finalMarks += 1;
+            if(form.m20 && form.m20.value === "A") finalMarks += 1;
+
+            // Part B: Blanks (10 Marks)
+            if(document.getElementById('f1').value.trim().toLowerCase() === "safe") finalMarks += 1;
+            if(document.getElementById('f2').value.trim().toLowerCase() === "unsafe") finalMarks += 1;
+            if(document.getElementById('f3').value.trim().toLowerCase() === "safe") finalMarks += 1;
+            if(document.getElementById('f4').value.trim().toLowerCase() === "unsafe") finalMarks += 1;
+            if(document.getElementById('f5').value.trim().toLowerCase() === "safe") finalMarks += 1;
+            if(document.getElementById('f6').value.trim().toLowerCase() === "unsafe") finalMarks += 1;
+            if(document.getElementById('f7').value.trim().toLowerCase() === "unsafe") finalMarks += 1;
+            if(document.getElementById('f8').value.trim().toLowerCase() === "safe") finalMarks += 1;
+            if(document.getElementById('f9').value.trim().toLowerCase() === "internet") finalMarks += 1;
+            if(document.getElementById('f10').value.trim().toLowerCase() === "games") finalMarks += 1;
+
+            // Part C: Two Column Matching (10 Marks)
+            if(document.getElementById('k1').value.trim().toUpperCase() === "A") finalMarks += 1;
+            if(document.getElementById('k2').value.trim().toUpperCase() === "B") finalMarks += 1;
+            if(document.getElementById('k3').value.trim().toUpperCase() === "C") finalMarks += 1;
+            if(document.getElementById('k4').value.trim().toUpperCase() === "D") finalMarks += 1;
+            if(document.getElementById('k5').value.trim().toUpperCase() === "E") finalMarks += 1;
+            if(document.getElementById('k6').value.trim().toUpperCase() === "F") finalMarks += 1;
+            if(document.getElementById('k7').value.trim().toUpperCase() === "G") finalMarks += 1;
+            if(document.getElementById('k8').value.trim().toUpperCase() === "H") finalMarks += 1;
+            if(document.getElementById('k9').value.trim().toUpperCase() === "I") finalMarks += 1;
+            if(document.getElementById('k10').value.trim().toUpperCase() === "J") finalMarks += 1;
+
+            board.className = "score-success";
+            board.innerHTML = `
+                <div style='font-size:24px; margin-bottom:10px;'>🎉 Assessment Sheets Secured!</div>
+                <strong>Objective Score: ${finalMarks} / 40 Marks</strong><br>
+                <span style='font-size:14px; color:#4b5563; font-weight:normal;'>
+                    The remaining 40 Marks for Short & Long descriptive answers are saved. 
+                    Your training center instructor will grade them manually to update the total out of 80 Marks.
+                </span>
+            `;
+        }
+        
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        
+        // Permanent Input Lockdown
+        document.querySelectorAll('input, textarea, select, button').forEach(el => el.disabled = true);
+        document.getElementById('floatingClock').style.background = "#4b5563";
+        document.getElementById('floatingClock').innerText = "Status: Locked";
+        document.getElementById('warningBox').style.display = "none";
+    }
+
+    // Keyboard and Developer Tools Interception Locks
+    document.onkeydown = function(e) {
+        if (e.keyCode == 123 || (e.ctrlKey && (e.keyCode == 67 || e.keyCode == 86 || e.keyCode == 85 || e.keyCode == 73 || e.keyCode == 74))) {
+            alert("Security Protocol active: Action Denied.");
+            return false;
+        }
+    };
+</script>
+
+</body>
+</html>
